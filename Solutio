@@ -1,0 +1,94 @@
+SOLUTION 1.
+
+- It's always bad to use the keys inside the Dockerfile
+- Should not used hardcoded values like IP address, Usernames, Passwords.
+- better to use a specific version of the base image instead of using latest, that can be changed and can cause issues.
+- Should follow the docker best practises while writing a docker file.
+
+
+SOLUTION 2.
+
+The naming convention used.
+• Aws EC2.tf : aws_EC2_dev.tf
+• CA_1.pem : CA_1_dev.pem
+• Internal Cert.PEM : Internal_Cert_dev.pem
+• Docker_file : Docketfile : needs to be available in the same folder so convention not required.
+• data.G_zip data-dev.G_zip
+• configTemplate.yml : config_template_dev.yml
+
+The reason why I chose naming convention is, Whenever I wanted to use any kind of automation script it will be easy to use it with the similar kind of 
+environment so that errors can be minimised.Naming documents in a logical and intuitive way ensures that your team and collaborators can discover, 
+manage and access documents when needed. A consistent naming convention allows teams to identify both duplicated records/obsolete versions and 
+University records of enduring business value.
+
+
+SOLUTION 4.
+
+Till now I have not worked much on security vulnerabilities of containers but  there are several ubuntu vulnerabilities that came up with the 
+base image and needs corrections as these leaks can be harmful for the whole applications and can be used to attack, slowing down or memory leaking. 
+We can get to know about these by scanning the images using various scanning tools like docker-scan, Anchore engine or clair etc.
+we can get to know more about these vulnerabilities by going on https://nvd.nist.gov/vuln/detail/ and search them with CVE codes. for example
+
+CVE-2011-3374 It's an ubuntu specific error and debian does not enable net-update. After CVE-2012-0954.
+
+CVE-2017-13716  This issue is actually a libiberty issue, but there doesn't
+appear to be a libiberty bug open for it as of 2020-10-19
+	
+so all the others are the vulnerabilities existed in the older release of the ubuntu distros, so to overcome these we can choose to upgrade to the lates 
+release of ubuntu either 18.04 or 20.04 LTS.
+
+
+SOLUTION 5.
+
+This is the issue with the certificate checking as In 1.1.0 and above we check the digest algorithm used to create signatures in intermediate CA certs. 
+If it is not sufficiently strong then we reject the cert. When OpenSSL verifies the certificate chain, 
+it checks the key size against the configured security level.  
+According to the documentation, level 1 corresponds to a minimum of 80 bits of security, level 2 to 112 bits, 
+level 3 to 128 bits, level 4 to 192 bits and level 5 to 256 bits. so the issue is with the security levels.
+
+The fix for the issue is to migrate to openSSL 1.1.1 or higher
+
+or the work around for this is to reduce the security level. 
+
+SOLUTION 6.
+
+Image shows ip address with 5 octets in the provided IP addresses and No CA certificates can show the issues with security vulnerabilities.
+
+
+SOLUTION 7.
+
+During the creation of a CI/CD pipeline we have to be very efficient and according to me, we have to ask below questions to ourselves before providing 
+solutions around a pipeline.
+- Use DevSecOps or Security First Approach, where possible: Try to implement the security best practises while creation of a CI/CD pipelines l
+ike usage of encrypted VPNs/VPCs etc or any other security related tools. As CI/CD has access to our code base, it needs to be secured properly. 
+- Use infrastructure as Code extensively: Use of IaaC greatly reduces our dependency on infrastructure failure. As instead of fixing the infrastructure, 
+It's better to build a new one with Terraform/ Cloud Formation etc. We have used it extensively during various projects for QA/STE environments 
+where we have created the replica of prod to QA/STE and executed the test cases for the max efficiencies. 
+- Use version control extensively: use Github/bitbucket etc for versioning of the applications as it greatly reduces the effort and errors. 
+- Deploy to production only after a confirm validation from client. This helps in reducing downtime and helps.
+- Use a Central Code repository for sync with the latest codes and effective collaboration.
+- Automate as much as possible.
+- try to implement 12 factor apps principals where possible.
+- try to use the micro service based approach where loose coupling helps a lot for the applications to run efficiently with very less downtime. 
+ 
+
+SOLUTION 8.
+
+My personal best project so far is vSphere automation. When I started working on this project, 
+I was very new to vSphere Environment but I always like to learn/work on new IT technologies. 
+I was asked to prepare a POC first for the automation using right set of tools, which can be beneficial for the client, 
+as client was very much interested in Ansible automation, so I chose Ansible for the automation of vSphere. 
+I Started learning vSphere and after 5 days I created a POC in our lab environment for the automated deployment of vCenter 6.5/6.7 by using Ansible and 
+a JSON based configuration file and after few weeks I started working for the client on vSphere automation with around 50 backlog tasks. 
+I was working on the project as an Individual contributor and handled whole project by myself. 
+The tasks on which I worked for the clients were like DRS Enabling, DRS Affinity/Anti Affinity rules, Datacenter creation, Cluster creation, 
+ESXI Addition, Automated licensing of vCSA/ESXI, AD over LDAP Automation etc. 
+During this whole engagement  I learnt about VMware vCenter, ESXI, vSphere APIs, Various Ansible modules for VMware, PowerCLI, DCLI Commands etc. 
+I received many appreciations from the Client for the whole automation and during the same year I received the innovator award for the IaaC automation
+for the same project from DELL. One of my technical publication was published on DZONE as well. 
+https://dzone.com/articles/automated-deployment-of-vcsa-with-ansible
+
+
+
+
+
